@@ -142,7 +142,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error al eliminar el curso con ID: {id} de la base de datos SQL Server: {ex.Message}");
+                _logger.LogError($"Error al eliminar el usuario con ID: {id} de la base de datos SQL Server: {ex.Message}");
                 Console.WriteLine($"Error SQL Server (eliminar): {ex.Message}");
                 return false;
             }

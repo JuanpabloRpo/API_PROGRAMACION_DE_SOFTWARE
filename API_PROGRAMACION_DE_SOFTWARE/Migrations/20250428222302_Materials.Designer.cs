@@ -4,6 +4,7 @@ using API_PROGRAMACION_DE_SOFTWARE.DAOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_PROGRAMACION_DE_SOFTWARE.Migrations
 {
     [DbContext(typeof(DAOsContext))]
-    partial class DAOsContextModelSnapshot : ModelSnapshot
+    [Migration("20250428222302_Materials")]
+    partial class Materials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,13 +86,14 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Migrations
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ReservationId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -178,6 +182,25 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Migrations
                         .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Book");
+                });
+
+            modelBuilder.Entity("API_PROGRAMACION_DE_SOFTWARE.Entities.Reservation", b =>
+                {
+                    b.HasOne("API_PROGRAMACION_DE_SOFTWARE.Entities.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API_PROGRAMACION_DE_SOFTWARE.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
