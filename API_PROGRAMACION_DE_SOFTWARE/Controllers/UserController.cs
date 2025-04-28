@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using API_PROGRAMACION_DE_SOFTWARE.DAOs;
 using API_PROGRAMACION_DE_SOFTWARE.Entities;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 
@@ -34,17 +28,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpGet]
         [Route("Buscar")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUser(int userId)
         {
-            var user = await _userService.GetUser(id);
+            var user = await _userService.GetUser(userId);
             if (user != null)
             {
-                _logger.LogInformation($"Usuario con ID: {id} encontrado.");
+                _logger.LogInformation($"Usuario con ID: {userId} encontrado.");
                 return Ok(user);
             }
             else
             {
-                _logger.LogWarning($"No se encontró el usuario con ID: {id}.");
+                _logger.LogWarning($"No se encontró el usuario con ID: {userId}.");
                 return NotFound();
             }
         }
@@ -85,17 +79,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpDelete]
         [Route("Eliminar")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int userId)
         {
-            bool resultado = await _userService.DeleteUser(id);
+            bool resultado = await _userService.DeleteUser(userId);
             if (resultado)
             {
-                _logger.LogInformation($"Usuario con ID: {id} eliminado de manera exitosa.");
+                _logger.LogInformation($"Usuario con ID: {userId} eliminado de manera exitosa.");
                 return NoContent();
             }
             else
             {
-                _logger.LogError($"Error al eliminar el usuario con ID: {id}.");
+                _logger.LogError($"Error al eliminar el usuario con ID: {userId}.");
                 return NotFound();
             }
         }
