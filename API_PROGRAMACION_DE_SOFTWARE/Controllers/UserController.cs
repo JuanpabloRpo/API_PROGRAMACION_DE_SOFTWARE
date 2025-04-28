@@ -56,12 +56,12 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
             bool resultado = await _userService.CreateUser(user);
             if (resultado)
             {
-                _logger.LogInformation("Usuario insertado de manera exitosa.");
+                _logger.LogInformation("Usuario creado de manera exitosa.");
                 return Ok();
             }
             else
             {
-                _logger.LogError("Error al insertar el usuario.");
+                _logger.LogError("Error al crear el usuario.");
                 return BadRequest("No se pudo guardar el usuario.");
             }
         }
