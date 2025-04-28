@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using API_PROGRAMACION_DE_SOFTWARE.DAOs;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using API_PROGRAMACION_DE_SOFTWARE.Utilities;
@@ -10,19 +9,17 @@ using API_PROGRAMACION_DE_SOFTWARE.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Add AutoMapper
-    // builder.Services.AddAutoMapper(typeof(UserProfile));
 
-// This is the default connection string for SQL Server LocalDB.
+    // This is the default connection string for SQL Server LocalDB.
     var connectionString = builder.Configuration.GetConnectionString("SQLServerConnection") ?? throw new InvalidOperationException("Connection string 'SQLServerConnection' is not configured.");
 
-// Configure the SQLServerConfiguration with the connection string
+    // Configure the SQLServerConfiguration with the connection string
     builder.Services.Configure<SQLServerConfiguration>(options =>
     {
         options.ConnectionString = connectionString;
     });
 
-// Register the DbContext with the connection string
+    // Register the DbContext with the connection string
     builder.Services.AddDbContext<DAOsContext>(options => options.UseSqlServer(connectionString));
 
     builder.Services.AddScoped<IUserDAO, UserDAO>();
@@ -31,9 +28,12 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<IMaterialDAO, MaterialDAO>();
     builder.Services.AddScoped<IMaterialService, MaterialService>();
 
+    builder.Services.AddScoped<IReservationDAO, ReservationDAO>();
+    builder.Services.AddScoped<IReservationService, ReservationService>();
+
     builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();

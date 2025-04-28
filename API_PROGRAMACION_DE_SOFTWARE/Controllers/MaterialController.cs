@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using API_PROGRAMACION_DE_SOFTWARE.Entities;
+using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 {
@@ -27,17 +27,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpGet]
         [Route("Buscar")]
-        public async Task<IActionResult> GetMaterial(int id)
+        public async Task<IActionResult> GetMaterial(int materialId)
         {
-            var material = await _materialService.GetMaterial(id);
+            var material = await _materialService.GetMaterial(materialId);
             if (material != null)
             {
-                _logger.LogInformation($"Material con ID: {id} encontrado.");
+                _logger.LogInformation($"Material con ID: {materialId} encontrado.");
                 return Ok(material);
             }
             else
             {
-                _logger.LogWarning($"No se encontró el material con ID: {id}.");
+                _logger.LogWarning($"No se encontró el material con ID: {materialId}.");
                 return NotFound();
             }
         }
@@ -78,17 +78,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpDelete]
         [Route("Eliminar")]
-        public async Task<IActionResult> DeleteMaterial(int id)
+        public async Task<IActionResult> DeleteMaterial(int materialId)
         {
-            bool result = await _materialService.DeleteMaterial(id);
+            bool result = await _materialService.DeleteMaterial(materialId);
             if (result)
             {
-                _logger.LogInformation($"Material con ID: {id} eliminado exitosamente.");
+                _logger.LogInformation($"Material con ID: {materialId} eliminado exitosamente.");
                 return NoContent();
             }
             else
             {
-                _logger.LogError($"Error al eliminar el material con ID: {id}.");
+                _logger.LogError($"Error al eliminar el material con ID: {materialId}.");
                 return NotFound();
             }
         }
