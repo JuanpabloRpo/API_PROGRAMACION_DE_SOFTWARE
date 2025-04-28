@@ -7,5 +7,8 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
     {
         public DAOsContext(DbContextOptions<DAOsContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<Book> Books { get; set; }
+        public DbSet<Audiovisual> Audiovisuals { get; set; }
     }
 }
