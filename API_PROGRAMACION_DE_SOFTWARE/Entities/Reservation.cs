@@ -9,12 +9,11 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Entities
         [Key]
         public int ReservationId { get; set; }
         [Required]
-        public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-
+        public int UserId { get; set; }
         [Required]
-        public int MaterialId { get; set; }
         [ForeignKey(nameof(MaterialId))]
+        public int MaterialId { get; set; }
         public DateTime RequestDate { get; set; }
         public DateTime ExpirationDate { get; set; }
         public ReservationStatus Status { get; set; }
