@@ -57,7 +57,6 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 {
                     throw new InvalidOperationException($"No se encontró una reserva con el ID: {reservationId}");
                 }
-
                 return reservation;
             }
             catch (Exception ex)
