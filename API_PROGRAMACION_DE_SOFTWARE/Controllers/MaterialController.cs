@@ -21,8 +21,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         [Route("Listar")]
         public async Task<IActionResult> ListMaterials()
         {
-            var materials = await _materialService.ListMaterials();
-            return Ok(materials);
+            return Ok(await _materialService.ListMaterials());
         }
 
         [HttpGet]
@@ -40,6 +39,13 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
                 _logger.LogWarning($"No se encontró el material con ID: {materialId}.");
                 return NotFound();
             }
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<List<Material>> ViewAvaraibleMaterials()
+        {
+            return null;
         }
 
         [HttpPost]

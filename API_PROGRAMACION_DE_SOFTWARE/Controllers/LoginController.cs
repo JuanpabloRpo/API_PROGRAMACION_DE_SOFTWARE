@@ -19,7 +19,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         }
 
         [HttpGet]
-        [Route("Verificar")]
+        [Route("VerificarUsuario")]
         public async Task<ActionResult> Check(string userName, string password) 
         {
             return await _loginService.check(userName, password) == true ? Ok(true): NotFound(false) ;

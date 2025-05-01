@@ -3,6 +3,8 @@ using API_PROGRAMACION_DE_SOFTWARE.DAOs;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using API_PROGRAMACION_DE_SOFTWARE.Utilities;
 using API_PROGRAMACION_DE_SOFTWARE.Services;
+using System.Text.Json.Serialization;
+
 
 //using Library.Services;
 
@@ -37,11 +39,16 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<ILoginDAO, LoginDAO>();
     builder.Services.AddScoped<ILoginService, LoginService>();
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-    builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
