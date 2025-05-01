@@ -19,10 +19,10 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpGet]
         [Route("Listar")]
-        public async Task<IActionResult> ListLoans()
+        public async Task<List<Loan>> ListLoans()
         {
             var loans = await _loanService.ListLoans();
-            return Ok(loans);
+            return loans;
         }
 
         [HttpGet]
