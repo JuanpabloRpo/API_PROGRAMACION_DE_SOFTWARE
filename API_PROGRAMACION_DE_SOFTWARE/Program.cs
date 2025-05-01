@@ -34,6 +34,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<ILoanDAO, LoanDAO>();
     builder.Services.AddScoped<ILoanService, LoanService>();
 
+    builder.Services.AddScoped<ILoginDAO, LoginDAO>();
+    builder.Services.AddScoped<ILoginService, LoginService>();
+
 builder.Services.AddControllers();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
