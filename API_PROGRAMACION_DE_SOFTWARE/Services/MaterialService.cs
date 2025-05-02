@@ -1,5 +1,6 @@
 ﻿using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using API_PROGRAMACION_DE_SOFTWARE.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Services
 {
@@ -14,7 +15,13 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
 
         public async Task<List<Material>> ListMaterials()
         {
-            return await _materialDAO.ListMaterials();
+            var materials = await _materialDAO.ListMaterials();
+            return materials.IsNullOrEmpty() != true ? materials: null;
+        }
+        public async Task<List<Material>> ListAvaraibleMaterials()
+        {
+            var materials = await _materialDAO.ListAvaraibleMaterials();
+            return materials.IsNullOrEmpty() != true ? materials : null;
         }
 
         public async Task<Material> GetMaterial(int materialID)

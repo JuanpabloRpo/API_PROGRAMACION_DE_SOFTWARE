@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using API_PROGRAMACION_DE_SOFTWARE.Entities;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 {
@@ -30,16 +31,16 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         public async Task<IActionResult> GetReservation(int reservationId)
         {
             var reservation = await _reservationService.GetReservation(reservationId);
-            if (reservation != null)
-            {
-                _logger.LogInformation($"Reserva con ID: {reservationId} encontrado.");
-                return Ok(reservation);
-            }
-            else
-            {
-                _logger.LogWarning($"No se encontró la reserva con ID: {reservationId}.");
-                return NotFound();
-            }
+            return reservation != null ? Ok(reservation) : NotFound();
+
+        }
+        [HttpGet]
+        [Route("ReservacionesUsuario")]
+        public async Task<IActionResult> GetReservationsUser(int userId)
+        {
+            var reservation = await _reservationService.GetReservationsUser(userId);
+            return reservation.IsNullOrEmpty() != true ? Ok(reservation) : NotFound();
+
         }
 
         [HttpPost]

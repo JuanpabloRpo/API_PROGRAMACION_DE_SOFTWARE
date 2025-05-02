@@ -21,7 +21,8 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         [Route("Listar")]
         public async Task<IActionResult> ListMaterials()
         {
-            return Ok(await _materialService.ListMaterials());
+            var listM = await _materialService.ListMaterials();
+            return listM != null ? Ok(listM) : NotFound(listM);
         }
 
         [HttpGet]
@@ -42,10 +43,11 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         }
 
         [HttpGet]
-        [Route("[action]")]
-        public async Task<List<Material>> ViewAvaraibleMaterials()
+        [Route("MaterialesDisponibles")]
+        public async Task<IActionResult> ViewAvaraibleMaterials()
         {
-            return null;
+            var listM = await _materialService.ListAvaraibleMaterials();
+            return listM != null ? Ok(listM) : NotFound(listM);
         }
 
         [HttpPost]
