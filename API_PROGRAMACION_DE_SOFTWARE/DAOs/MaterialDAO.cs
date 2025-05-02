@@ -5,6 +5,7 @@ using API_PROGRAMACION_DE_SOFTWARE.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Services
@@ -32,6 +33,21 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             {
                 using var db = Connection();
                 var materials = await db.QueryAsync<Material>(MaterialQueries.listMaterials, new { });
+                return materials.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al leer materiales: {ex.Message}");
+            }
+            return result;
+        }
+        public async Task<List<Material>> ListAvaraibleMaterials()
+        {
+            List<Material> result = new List<Material>();
+            try
+            {
+                using var db = Connection();
+                var materials = await db.QueryAsync<Material>(MaterialQueries.listAvaraibleMaterials, new { });
                 return materials.ToList();
             }
             catch (Exception ex)

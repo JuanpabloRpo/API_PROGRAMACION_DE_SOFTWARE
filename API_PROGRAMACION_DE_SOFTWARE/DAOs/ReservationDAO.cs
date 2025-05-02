@@ -7,6 +7,7 @@ using API_PROGRAMACION_DE_SOFTWARE.Enumerations;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using API_PROGRAMACION_DE_SOFTWARE.Migrations;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 {
@@ -51,20 +52,30 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             {
                 using var db = Connection();
                 var reservation = await db.QueryFirstOrDefaultAsync<Reservation>(ReservationQueries.getReservation, new { ReservationId = reservationId });
-                _logger.LogInformation($"Búsqueda exitosa de la reserva con ID: {reservationId} en SQL Server");
-
-                if (reservation == null)
-                {
-                    throw new InvalidOperationException($"No se encontró una reserva con el ID: {reservationId}");
-                }
                 return reservation;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error al buscar la reserva con ID: {reservationId} en la base de datos SQL Server: {ex.Message}");
                 Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
-                throw;
             }
+            return null;
+        }
+        public async Task<List<Reservation>> SearchReservationsUser(int userId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryAsync<Reservation>(ReservationQueries.searchReservationsUser, new { UserId = userId });
+                return reservation.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar la reserva para el usuario con ID: {userId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+
+            }
+            return null;
         }
 
         public async Task<Boolean> CreateReservation(Reservation reservation)
