@@ -84,7 +84,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     loan.StartDate,
                     loan.DueDate,
                     loan.ReturnDate,
-                    Status = loan.Status.ToString()
+                    Status = ConversorEnumInt.LoanStatusConver(loan.Status.ToString())
                 });
                 return result > 0;
 
@@ -114,7 +114,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     loan.StartDate,
                     loan.DueDate,
                     loan.ReturnDate,
-                    Status = loan.Status.ToString()
+                    Status = ConversorEnumInt.LoanStatusConver(loan.Status.ToString())
                 });
                 return result > 0;
 

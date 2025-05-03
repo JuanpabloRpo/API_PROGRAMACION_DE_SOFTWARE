@@ -31,67 +31,41 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         public async Task<IActionResult> GetReservation(int reservationId)
         {
             var reservation = await _reservationService.GetReservation(reservationId);
-            return reservation != null ? Ok(reservation) : NotFound();
+            return reservation != null ? Ok(reservation) : NotFound(reservation);
 
         }
+
         [HttpGet]
         [Route("ReservacionesUsuario")]
         public async Task<IActionResult> GetReservationsUser(int userId)
         {
             var reservation = await _reservationService.GetReservationsUser(userId);
-            return reservation.IsNullOrEmpty() != true ? Ok(reservation) : NotFound();
+            return reservation.IsNullOrEmpty() != true ? Ok(reservation) : NotFound("No hay reservas");
 
         }
 
         [HttpPost]
         [Route("Crear")]
-        public async Task<IActionResult> CreateReservation(Reservation reservation)
+        public async Task<IActionResult> CreateReservation(int materialId, int userId)
         {
-            bool resultado = await _reservationService.CreateReservation(reservation);
-            if (resultado)
-            {
-                _logger.LogInformation("Reserva creada de manera exitosa.");
-                return Ok();
-            }
-            else
-            {
-                _logger.LogError("Error al crear la reserva.");
-                return BadRequest("No se pudo guardar la reserva.");
-            }
+            return await _reservationService.CreateReservation(materialId,userId) == true ? Ok("Reserva creada de manera exitosa.") : BadRequest("No se pudo guardar la reserva.");
         }
 
         [HttpPut]
         [Route("Actualizar")]
         public async Task<IActionResult> UpdateReservation(Reservation reservation)
         {
-            bool resultado = await _reservationService.UpdateReservation(reservation);
-            if (resultado)
-            {
-                _logger.LogInformation("Reserva actualizada de manera exitosa.");
-                return Ok();
-            }
-            else
-            {
-                _logger.LogError($"Error al actualizar la reserva con ID: {reservation.ReservationId}.");
-                return BadRequest("No se pudo actualizar la reserva.");
-            }
+            var resultado = await _reservationService.UpdateReservation(reservation);
+            return resultado != false ? Ok(resultado) : BadRequest("No se pudo actualizar la reserva.");
+            
         }
+
 
         [HttpDelete]
         [Route("Eliminar")]
         public async Task<IActionResult> DeleteReservation(int reservationId)
         {
-            bool resultado = await _reservationService.DeleteReservation(reservationId);
-            if (resultado)
-            {
-                _logger.LogInformation($"Reserva con ID: {reservationId} eliminada de manera exitosa.");
-                return NoContent();
-            }
-            else
-            {
-                _logger.LogError($"Error al eliminar la reserva con ID: {reservationId}.");
-                return NotFound();
-            }
+            return await _reservationService.DeleteReservation(reservationId) == true ? NoContent():NotFound();
         }
     }
 }
