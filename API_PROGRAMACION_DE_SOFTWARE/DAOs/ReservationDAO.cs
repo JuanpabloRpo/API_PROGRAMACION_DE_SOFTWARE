@@ -80,9 +80,6 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 
         public async Task<Boolean> CreateReservation(Reservation reservation)
         {
-            reservation.RequestDate = DateTime.Now;
-            reservation.ExpirationDate = reservation.RequestDate.AddDays(7);
-            reservation.Status = ReservationStatus.Pending;
             int result = 0;
             try
             {
@@ -93,7 +90,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     reservation.MaterialId,
                     reservation.RequestDate,
                     reservation.ExpirationDate,
-                    Status = reservation.Status.ToString()
+                    Status = ConversorEnumInt.ReservationStatusConver(reservation.Status.ToString())
                 });
                 return result > 0;
 
