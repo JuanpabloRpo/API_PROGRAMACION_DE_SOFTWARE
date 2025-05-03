@@ -46,6 +46,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 
             return result;
         }
+
         public async Task<Reservation> GetReservation(int reservationId)
         {
             try
@@ -61,6 +62,38 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             }
             return null;
         }
+
+        public async Task<Boolean> CheckReservationPending(int reservationId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryFirstOrDefaultAsync<Reservation>(ReservationQueries.checkReservationPending, new { ReservationId = reservationId });
+                return reservation != null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar la reserva con ID: {reservationId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+            }
+            return false;
+        }
+        public async Task<Boolean> UpdateReservationStatus(int reservationId, int newStatus)
+        {
+            var rowsAffected = 0;
+            try
+            {
+                using var db = Connection();
+                rowsAffected = await db.ExecuteAsync(ReservationQueries.updateReservationStatus, new { ReservationId = reservationId, Status = newStatus });
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el Status de la reserva con ID {reservationId}: {ex.Message}");
+            }
+            return rowsAffected > 0;
+        }
+
         public async Task<List<Reservation>> SearchReservationsUser(int userId)
         {
             try
@@ -90,7 +123,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     reservation.MaterialId,
                     reservation.RequestDate,
                     reservation.ExpirationDate,
-                    Status = ConversorEnumInt.ReservationStatusConver(reservation.Status.ToString())
+                    Status = ConversorEnumInt.ReservationStatusConver(ReservationStatus.Pending.ToString())
                 });
                 return result > 0;
 

@@ -74,7 +74,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             reservation.ExpirationDate = reservation.RequestDate.AddDays(7);
             reservation.Status = ReservationStatus.Pending;
 
-            bool resultado = await _reservationDAO.CreateReservation(reservation);
+            var resultado = await _reservationDAO.CreateReservation(reservation);
             var materialActualizado = await _materialDAO.UpdateMaterialStatus(materialId, 1);
 
             if (resultado == true && materialActualizado == true)

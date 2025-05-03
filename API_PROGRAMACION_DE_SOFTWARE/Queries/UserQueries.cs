@@ -4,8 +4,8 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Queries
 {
     public class UserQueries
     {
-        public static string listUsers = "SELECT Id, Document, FirstName, LastName, MiddleName, Age, Email, UserName, Password, Arrears, TypeUser, Role, IsActive FROM Users";
-        public static string getUser = "SELECT Id, Document, FirstName, LastName, MiddleName, Age, Email, UserName, Password, Arrears, TypeUser, Role, IsActive FROM Users WHERE Id = @Id";
+        public static string listUsers = "SELECT * FROM Users";
+        public static string getUser = "SELECT * WHERE Id = @Id";
         public static string createUser = "INSERT INTO Users (Document, FirstName, LastName, MiddleName, Age, Email, UserName, Password, TypeUser) VALUES (@Document, @FirstName, @LastName, @MiddleName, @Age, @Email, @UserName, @Password, @TypeUser); SELECT CAST(SCOPE_IDENTITY() as int)";
         public static string updateUser = "UPDATE Users SET Document = @Document, FirstName = @FirstName, LastName = @LastName, MiddleName = @MiddleName, Age = @Age, Email = @Email, UserName = @UserName, Password = @Password, Arrears = @Arrears, TypeUser = @TypeUser, Role = @Role, IsActive = @IsActive WHERE Id = @Id";
         public static string deleteUser = "DELETE FROM Users WHERE Id = @Id";

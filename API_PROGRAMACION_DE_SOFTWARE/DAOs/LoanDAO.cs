@@ -7,6 +7,8 @@ using API_PROGRAMACION_DE_SOFTWARE.Enumerations;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using API_PROGRAMACION_DE_SOFTWARE.Migrations;
+using Microsoft.VisualBasic;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 {
@@ -68,26 +70,19 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             }
         }
 
-        public async Task<Boolean> CreateLoan(Loan loan)
+        public async Task<Boolean> CreateLoan(int reservationId, int userId)
         {
-            loan.StartDate = DateTime.Now;
-            loan.DueDate = loan.StartDate.AddDays(15);
-            loan.Status = LoanStatus.Active;
             int result = 0;
             try
             {
                 using var db = Connection();
                 result = await db.ExecuteAsync(LoanQueries.createLoan, new
                 {
-                    loan.UserId,
-                    loan.ReservationId,
-                    loan.StartDate,
-                    loan.DueDate,
-                    loan.ReturnDate,
-                    Status = ConversorEnumInt.LoanStatusConver(loan.Status.ToString())
+                    UserId = userId,
+                    ReservationId = reservationId,
+                    Status = ConversorEnumInt.LoanStatusConver(LoanStatus.Active.ToString())
                 });
                 return result > 0;
-
             }
             catch (Exception ex)
             {

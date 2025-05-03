@@ -4,7 +4,7 @@
     {
         public static string listMaterials = "SELECT * FROM Materials";
         public static string listAvaraibleMaterials = "SELECT * FROM Materials WHERE Status = 0";
-        public static string getMaterial = @"SELECT MaterialID, Title, Author, PublicationYear, Status, Condition, Topic, Discriminator, Format, Duration, Pages FROM Materials WHERE MaterialId = @MaterialId";
+        public static string getMaterial = @"SELECT * FROM Materials WHERE MaterialId = @MaterialId";
         public static string checkAvailableMaterial = @"SELECT * FROM Materials WHERE MaterialId = @MaterialId AND Status = 0";
         public static string updateMaterialStatus = @"UPDATE Materials SET Status = @Status WHERE MaterialId = @MaterialId";
         public static string createMaterial = @"INSERT INTO Materials (Title, Author, PublicationYear, Status, Condition, Topic, Discriminator, Format, Duration, Pages) VALUES (@Title, @Author, @PublicationYear, @Status, @Condition, @Topic, @Discriminator, @Format, @Duration, @Pages); SELECT CAST(SCOPE_IDENTITY() as int)";

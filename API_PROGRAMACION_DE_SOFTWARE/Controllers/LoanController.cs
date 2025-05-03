@@ -1,6 +1,7 @@
 ﻿using API_PROGRAMACION_DE_SOFTWARE.Entities;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Specialized;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 {
@@ -30,17 +31,24 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         public async Task<IActionResult> GetLoan(int loanId)
         {
             var loan = await _loanService.GetLoan(loanId);
-            return loan == null ? NotFound() : Ok(loan);
+            return loan == null ? BadRequest("No se encontro el prestamo") : Ok(loan);
             
         }
 
         [HttpPost]
-        [Route("Crear")]
-        public async Task<IActionResult> CreateLoan(Loan loan)
+        [Route("CrearPrestamo")]
+        public async Task<IActionResult> CreateLoan(int reservationId, int userId)
         {
-            var resultado = await _loanService.CreateLoan(loan);
-            return resultado != true ? BadRequest("No se pudo crear el préstamo.") : Ok(resultado);
+            var resultado = await _loanService.CreateLoan(reservationId, userId);
+            return resultado != true ? BadRequest("No se pudo crear el préstamo.") : Ok("Prestamo creado");
         }
+
+        /*[HttpPut]
+        [Route("RechazarPrestamo")]
+        public async Task<IActionResult> RefuseLoan()
+        {
+            return  Ok();
+        }*/
 
         [HttpPut]
         [Route("Actualizar")]
