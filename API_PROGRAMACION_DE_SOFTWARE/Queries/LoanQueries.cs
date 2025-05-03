@@ -2,17 +2,13 @@
 {
     public class LoanQueries
     {
-        public static string listLoans = @"
-            SELECT LoanId, UserId, ReservationID, StartDate, DueDate, ReturnDate, Status 
-            FROM Loans";
+        public static string listLoans = @"SELECT * FROM Loans";
 
-        public static string getLoan = @"
-            SELECT LoanId, UserId, ReservationID, StartDate, DueDate, ReturnDate, Status 
-            FROM Loans WHERE LoanId = @LoanId";
+        public static string getLoan = @"SELECT * FROM Loans WHERE LoanId = @LoanId";
 
         public static string createLoan = @"
-            INSERT INTO Loans (UserId, ReservationID, StartDate, DueDate, ReturnDate, Status) 
-            VALUES (@UserId, @ReservationID, GETDATE(), DATEADD(DAY, 7, GETDATE()), @ReturnDate, @Status); 
+            INSERT INTO Loans (UserId, ReservationID, StartDate, DueDate, Status) 
+            VALUES (@UserId, @ReservationID, GETDATE(), DATEADD(DAY, 7, GETDATE()), @Status); 
             SELECT CAST(SCOPE_IDENTITY() as int)";
 
         public static string updateLoan = @"

@@ -9,11 +9,15 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
     {
         private readonly ILoanDAO _loanDAO;
         private readonly ILogger<LoanController> _logger;
+        private readonly IReservationDAO _reservationDAO;
+        private readonly IMaterialDAO _materialDAO;
 
-        public LoanService(ILoanDAO loanDAO, ILogger<LoanController> logger)
+        public LoanService(ILoanDAO loanDAO, ILogger<LoanController> logger, IReservationDAO reservationDAO, IMaterialDAO materialDAO)
         {
             _loanDAO = loanDAO;
             _logger = logger;
+            _reservationDAO = reservationDAO;
+            _materialDAO = materialDAO;
         }
 
         public async Task<List<Loan>> ListLoans()
@@ -39,11 +43,26 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             return loan;
         }
 
-        public async Task<Boolean> CreateLoan(Loan loan)
+        public async Task<Boolean> CreateLoan(int reservationId, int userId)
         {
-            
-            bool resultado = await _loanDAO.CreateLoan(loan);
-            if (resultado)
+            // la reservacion tiene que estar en pendiente 
+            if (!await _reservationDAO.CheckReservationPending(reservationId))
+            {
+                _logger.LogError("Reservacion NO Pendiente/Existe");
+                return false;
+            }
+
+            // Se crea el nuevo prestamo
+            var resultado = await _loanDAO.CreateLoan(reservationId, userId);
+
+            // Se actualiza la reservacion de pending a accepted
+            var reservationActualizado = await _reservationDAO.UpdateReservationStatus(reservationId, 1);
+
+            // Se trae la reservacion para saber el Id del material para cambiar su Status
+            var reservacion = await _reservationDAO.GetReservation(reservationId);
+            var materialActualizado = await _materialDAO.UpdateMaterialStatus(reservacion.MaterialId, 2);
+
+            if (resultado && reservationActualizado && materialActualizado)
             {
                 _logger.LogInformation("Préstamo creado de manera exitosa.");
                 return true;
