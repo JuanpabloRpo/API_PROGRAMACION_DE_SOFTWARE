@@ -52,14 +52,28 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         }
 
         [HttpPut]
-        [Route("Actualizar")]
-        public async Task<IActionResult> UpdateReservation(Reservation reservation)
+        [Route("Extender")]
+        public async Task<IActionResult> ExtendReservation(Reservation reservation)
         {
-            var resultado = await _reservationService.UpdateReservation(reservation);
-            return resultado != false ? Ok(resultado) : BadRequest("No se pudo actualizar la reserva.");
-            
+            var resultado = await _reservationService.ExtendReservation(reservation);
+            return resultado != false ? Ok(resultado) : BadRequest("No se pudo extender la reserva."); 
         }
 
+        [HttpPut]
+        [Route("Rechazar")]
+        public async Task<IActionResult> RejectReservation(Reservation reservation)
+        {
+            var resultado = await _reservationService.RejectReservation(reservation);
+            return resultado != false ? Ok(resultado) : BadRequest("No se pudo cancelar la reserva.");
+        }
+
+        [HttpPut]
+        [Route("Cancelar")]
+        public async Task<IActionResult> CancelReservation(Reservation reservation)
+        {
+            var resultado = await _reservationService.CancelReservation(reservation);
+            return resultado != false ? Ok(resultado) : BadRequest("No se pudo cancelar la reserva.");
+        }
 
         [HttpDelete]
         [Route("Eliminar")]

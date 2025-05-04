@@ -90,18 +90,54 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<Boolean> UpdateReservation(Reservation reservation)
+        public async Task<Boolean> ExtendReservation(Reservation reservation)
         {
             
-            var resultado = await _reservationDAO.UpdateReservation(reservation);
+            var resultado = await _reservationDAO.ExtendReservation(reservation);
             if (resultado)
             {
-                _logger.LogInformation("Reserva actualizada de manera exitosa.");
+                _logger.LogInformation("Reserva extendida de manera exitosa.");
                 return true;
             }
             else
             {
-                _logger.LogError($"Error al actualizar la reserva con ID: {reservation.ReservationId}.");
+                _logger.LogError($"Error al extender la reserva con ID: {reservation.ReservationId}.");
+                return false;
+            }
+        }
+
+        public async Task<Boolean> RejectReservation(Reservation reservation)
+        {
+            reservation.Status = ReservationStatus.Rejected;
+            var resultado = await _reservationDAO.RejectReservation(reservation);
+            var materialResult = await _materialDAO.UpdateMaterialStatus(reservation.MaterialId, 0);
+
+            if (resultado)
+            {
+                _logger.LogInformation("Reserva cancelada de manera exitosa.");
+                return true;
+            }
+            else
+            {
+                _logger.LogError($"Error al cancelar la reserva con ID: {reservation.ReservationId}.");
+                return false;
+            }
+        }
+
+        public async Task<Boolean> CancelReservation(Reservation reservation)
+        {
+            reservation.Status = ReservationStatus.Canceled;
+            var resultado = await _reservationDAO.CancelReservation(reservation);
+            var materialResult = await _materialDAO.UpdateMaterialStatus(reservation.MaterialId, 0);
+
+            if (resultado)
+            {
+                _logger.LogInformation("Reserva cancelada de manera exitosa.");
+                return true;
+            }
+            else
+            {
+                _logger.LogError($"Error al cancelar la reserva con ID: {reservation.ReservationId}.");
                 return false;
             }
         }

@@ -36,26 +36,27 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         }
 
         [HttpPost]
-        [Route("CrearPrestamo")]
+        [Route("Crear")]
         public async Task<IActionResult> CreateLoan(int reservationId, int userId)
         {
             var resultado = await _loanService.CreateLoan(reservationId, userId);
             return resultado != true ? BadRequest("No se pudo crear el préstamo.") : Ok("Prestamo creado");
         }
 
-        /*[HttpPut]
-        [Route("RechazarPrestamo")]
-        public async Task<IActionResult> RefuseLoan()
+        [HttpPut]
+        [Route("Devolver")]
+        public async Task<IActionResult> ReturnLoan(Loan loan)
         {
-            return  Ok();
-        }*/
+            var resultado = await _loanService.ReturnLoan(loan);
+            return resultado == true ? Ok(resultado) : BadRequest("No se pudo actualizar el préstamo.");
+        }
 
         [HttpPut]
-        [Route("Actualizar")]
-        public async Task<IActionResult> UpdateLoan(Loan loan)
+        [Route("Cancelar")]
+        public async Task<IActionResult> CancelLoan(Loan loan)
         {
-            var resultado = await _loanService.UpdateLoan(loan);
-            return resultado == true ? Ok(resultado) : BadRequest("No se pudo actualizar el préstamo.");
+            var resultado = await _loanService.CancelLoan(loan);
+            return resultado == true ? Ok(resultado) : BadRequest("No se pudo cancelar el préstamo.");
         }
 
         [HttpDelete]

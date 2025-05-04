@@ -75,18 +75,52 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
 
         }
 
-        public async Task<Boolean> UpdateLoan(Loan loan)
+        public async Task<Boolean> ReturnLoan(Loan loan)
         {
-            
-            bool resultado = await _loanDAO.UpdateLoan(loan);
+            bool resultado = await _loanDAO.ReturnLoan(loan);
             if (resultado)
             {
-                _logger.LogInformation("Préstamo actualizado de manera exitosa.");
-                return true;
+                var reservacion = await _reservationDAO.GetReservation(loan.ReservationId);
+                var materialActualizado = await _materialDAO.UpdateMaterialStatus(reservacion.MaterialId, 0);
+                if (materialActualizado)
+                {
+                    _logger.LogInformation("Préstamo devuelto de manera exitosa.");
+                    return true;
+                }
+                else
+                {
+                    _logger.LogError("Error al actualizar el estado del material.");
+                    return false;
+                }
             }
             else
             {
-                _logger.LogError($"Error al actualizar el préstamo con ID: {loan.LoanId}.");
+                _logger.LogError($"Error al devolver el préstamo con ID: {loan.LoanId}.");
+                return false;
+            }
+        }
+
+        public async Task<Boolean> CancelLoan(Loan loan)
+        {
+            bool resultado = await _loanDAO.CancelLoan(loan);
+            if (resultado)
+            {
+                var reservacion = await _reservationDAO.GetReservation(loan.ReservationId);
+                var materialActualizado = await _materialDAO.UpdateMaterialStatus(reservacion.MaterialId, 0);
+                if (materialActualizado)
+                {
+                    _logger.LogInformation("Préstamo cancelado de manera exitosa.");
+                    return true;
+                }
+                else
+                {
+                    _logger.LogError("Error al actualizar el estado del material.");
+                    return false;
+                }
+            }
+            else
+            {
+                _logger.LogError($"Error al cancelar el préstamo con ID: {loan.LoanId}.");
                 return false;
             }
         }

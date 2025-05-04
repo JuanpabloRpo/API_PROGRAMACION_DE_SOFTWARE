@@ -92,24 +92,18 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             return result > 0;
         }
 
-        public async Task<Boolean> UpdateLoan(Loan loan)
+        public async Task<Boolean> ReturnLoan(Loan loan)
         {
-            loan.StartDate = DateTime.Now;
-            loan.DueDate = loan.StartDate.AddDays(15);
-            loan.Status = LoanStatus.Active;
+            loan.ReturnDate = DateTime.Now;
             int result = 0;
             try
             {
                 using var db = Connection();
-                result = await db.ExecuteAsync(LoanQueries.updateLoan, new
+                result = await db.ExecuteAsync(LoanQueries.returnLoan, new
                 {
                     loan.LoanId,
-                    loan.UserId,
-                    loan.ReservationId,
-                    loan.StartDate,
-                    loan.DueDate,
                     loan.ReturnDate,
-                    Status = ConversorEnumInt.LoanStatusConver(loan.Status.ToString())
+                    Status = ConversorEnumInt.LoanStatusConver(LoanStatus.Completed.ToString())
                 });
                 return result > 0;
 
@@ -117,6 +111,29 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             catch (Exception ex)
             {
                 _logger.LogError($"Error al actualizar el préstamo en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server: {ex.Message}");
+            }
+            return result > 0;
+        }
+
+        public async Task<Boolean> CancelLoan(Loan loan)
+        {
+            int result = 0;
+            try
+            {
+                using var db = Connection();
+                result = await db.ExecuteAsync(LoanQueries.cancelLoan, new
+                {
+                    loan.LoanId,
+                    loan.ReturnDate,
+                    Status = ConversorEnumInt.LoanStatusConver(LoanStatus.Canceled.ToString())
+                });
+                return result > 0;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al cancelar el préstamo en la base de datos SQL Server: {ex.Message}");
                 Console.WriteLine($"Error SQL Server: {ex.Message}");
             }
             return result > 0;
