@@ -11,13 +11,15 @@
             VALUES (@UserId, @ReservationID, GETDATE(), DATEADD(DAY, 7, GETDATE()), @Status); 
             SELECT CAST(SCOPE_IDENTITY() as int)";
 
-        public static string updateLoan = @"
+        public static string returnLoan = @"
             UPDATE Loans
-            SET UserId = @UserId,
-                ReservationId = @ReservationId,
-                StartDate = @StartDate,
-                DueDate = @DueDate,
-                ReturnDate = @ReturnDate,
+            SET ReturnDate = @ReturnDate,
+                Status = @Status
+            WHERE LoanId = @LoanId;";
+
+        public static string cancelLoan = @"
+            UPDATE Loans
+            SET ReturnDate = @ReturnDate,
                 Status = @Status
             WHERE LoanId = @LoanId;";
 
