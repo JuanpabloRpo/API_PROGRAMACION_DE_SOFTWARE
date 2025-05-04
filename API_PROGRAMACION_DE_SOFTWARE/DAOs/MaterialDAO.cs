@@ -5,6 +5,7 @@ using API_PROGRAMACION_DE_SOFTWARE.Utilities;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Services
@@ -40,6 +41,21 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
             return result;
         }
+        public async Task<List<Material>> ListAvailableMaterials()
+        {
+            List<Material> result = new List<Material>();
+            try
+            {
+                using var db = Connection();
+                var materials = await db.QueryAsync<Material>(MaterialQueries.listAvaraibleMaterials, new { });
+                return materials.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al leer materiales: {ex.Message}");
+            }
+            return result;
+        }
 
         public async Task<Material> GetMaterial(int materialId)
         {
@@ -61,6 +77,35 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
                 _logger.LogError($"Error al obtener el material con ID {materialId}: {ex.Message}");
                 throw;
             }
+        }
+        public async Task<Boolean> CheckAvailableMaterial(int materialId)
+        {
+            try
+            {
+                using var db = Connection();
+                var material = await db.QueryFirstOrDefaultAsync<Material>(MaterialQueries.checkAvailableMaterial, new { MaterialId = materialId });
+                return material != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar el material con ID {materialId}: {ex.Message}");
+            }
+            return false;
+        }
+        public async Task<Boolean> UpdateMaterialStatus(int materialId, int newStatus)
+        {
+            var rowsAffected = 0;
+            try
+            {
+                using var db = Connection();
+                rowsAffected = await db.ExecuteAsync(MaterialQueries.updateMaterialStatus, new { MaterialId = materialId, Status = newStatus });
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el Status del material con ID {materialId}: {ex.Message}");
+            }
+            return rowsAffected > 0;
         }
 
         public async Task<bool> CreateMaterial(Material material)
@@ -122,7 +167,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<bool> DeleteMaterial(int materialID)
+        public async Task<bool> DeleteMaterial(int materialID)  
         {
             try
             {

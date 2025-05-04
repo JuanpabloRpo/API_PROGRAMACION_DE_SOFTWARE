@@ -53,18 +53,13 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 var user = await db.QueryFirstOrDefaultAsync<User>(UserQueries.getUser, new { Id = id });
                 _logger.LogInformation($"Búsqueda exitosa del usuario con ID: {id} en SQL Server");
 
-                if (user == null)
-                {
-                    throw new InvalidOperationException($"No se encontró un usuario con el ID: {id}");
-                }
-
                 return user;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error al buscar el usuario con ID: {id} en la base de datos SQL Server: {ex.Message}");
                 Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
-                throw;
+                return null;
             }
         }
 

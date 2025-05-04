@@ -7,6 +7,7 @@ using API_PROGRAMACION_DE_SOFTWARE.Enumerations;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using API_PROGRAMACION_DE_SOFTWARE.Migrations;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 {
@@ -45,34 +46,73 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 
             return result;
         }
+
         public async Task<Reservation> GetReservation(int reservationId)
         {
             try
             {
                 using var db = Connection();
                 var reservation = await db.QueryFirstOrDefaultAsync<Reservation>(ReservationQueries.getReservation, new { ReservationId = reservationId });
-                _logger.LogInformation($"Búsqueda exitosa de la reserva con ID: {reservationId} en SQL Server");
-
-                if (reservation == null)
-                {
-                    throw new InvalidOperationException($"No se encontró una reserva con el ID: {reservationId}");
-                }
-
                 return reservation;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Error al buscar la reserva con ID: {reservationId} en la base de datos SQL Server: {ex.Message}");
                 Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
-                throw;
             }
+            return null;
+        }
+
+        public async Task<Boolean> CheckReservationPending(int reservationId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryFirstOrDefaultAsync<Reservation>(ReservationQueries.checkReservationPending, new { ReservationId = reservationId });
+                return reservation != null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar la reserva con ID: {reservationId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+            }
+            return false;
+        }
+        public async Task<Boolean> UpdateReservationStatus(int reservationId, int newStatus)
+        {
+            var rowsAffected = 0;
+            try
+            {
+                using var db = Connection();
+                rowsAffected = await db.ExecuteAsync(ReservationQueries.updateReservationStatus, new { ReservationId = reservationId, Status = newStatus });
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar el Status de la reserva con ID {reservationId}: {ex.Message}");
+            }
+            return rowsAffected > 0;
+        }
+
+        public async Task<List<Reservation>> SearchReservationsUser(int userId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryAsync<Reservation>(ReservationQueries.searchReservationsUser, new { UserId = userId });
+                return reservation.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar la reserva para el usuario con ID: {userId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+
+            }
+            return null;
         }
 
         public async Task<Boolean> CreateReservation(Reservation reservation)
         {
-            reservation.RequestDate = DateTime.Now;
-            reservation.ExpirationDate = reservation.RequestDate.AddDays(7);
-            reservation.Status = ReservationStatus.Pending;
             int result = 0;
             try
             {
@@ -83,7 +123,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     reservation.MaterialId,
                     reservation.RequestDate,
                     reservation.ExpirationDate,
-                    Status = reservation.Status.ToString()
+                    Status = ConversorEnumInt.ReservationStatusConver(ReservationStatus.Pending.ToString())
                 });
                 return result > 0;
 
@@ -96,7 +136,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             return result > 0;
         }
 
-        public async Task<Boolean> UpdateReservation(Reservation reservation)
+        public async Task<Boolean> ExtendReservation(Reservation reservation)
         {
             reservation.RequestDate = DateTime.Now;
             reservation.ExpirationDate = reservation.RequestDate.AddDays(7);
@@ -105,13 +145,55 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
             try
             {
                 using var db = Connection();
-                result = await db.ExecuteAsync(ReservationQueries.updateReservation, new
+                result = await db.ExecuteAsync(ReservationQueries.extendReservation, new
                 {
                     reservation.ReservationId,
-                    reservation.UserId,
-                    reservation.MaterialId,
                     reservation.RequestDate,
                     reservation.ExpirationDate,
+                    reservation.Status
+                });
+                return result > 0;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server: {ex.Message}");
+            }
+            return result > 0;
+        }
+
+        public async Task<Boolean> RejectReservation(Reservation reservation)
+        {
+            int result = 0;
+            try
+            {
+                using var db = Connection();
+                result = await db.ExecuteAsync(ReservationQueries.rejectReservation, new
+                {
+                    reservation.ReservationId,
+                    reservation.Status
+                });
+                return result > 0;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al actualizar en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server: {ex.Message}");
+            }
+            return result > 0;
+        }
+
+        public async Task<Boolean> CancelReservation(Reservation reservation)
+        {
+            int result = 0;
+            try
+            {
+                using var db = Connection();
+                result = await db.ExecuteAsync(ReservationQueries.cancelReservation, new
+                {
+                    reservation.ReservationId,
                     reservation.Status
                 });
                 return result > 0;

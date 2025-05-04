@@ -6,26 +6,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API_PROGRAMACION_DE_SOFTWARE.Migrations
 {
     /// <inheritdoc />
-    public partial class Reservations : Migration
+    public partial class Loans : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Reservations",
+                name: "Loans",
                 columns: table => new
                 {
-                    ReservationId = table.Column<int>(type: "int", nullable: false)
+                    LoanId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false),
-                    RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => x.ReservationId);
+                    table.PrimaryKey("PK_Loans", x => x.LoanId);
                 });
         }
 
@@ -33,7 +34,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "Loans");
         }
     }
 }
