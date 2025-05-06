@@ -90,9 +90,28 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<Boolean> ExtendReservation(Reservation reservation)
+        public async Task<Boolean> ExtendReservation(int reservationId, int userId) 
         {
-            
+            var reservation = await _reservationDAO.GetReservation(reservationId);
+            if (reservation == null)
+            {
+                _logger.LogError($"No se encontró la reserva con ID: {reservationId}.");
+                return false;
+            }
+
+            if (reservation.UserId != userId)
+            {
+                _logger.LogError($"La reserva con ID: {reservationId} no pertenece al usuario con ID: {userId}.");
+                return false;
+            }
+            if (reservation.Status == ReservationStatus.Extended)
+            {
+                _logger.LogWarning($"La reserva con ID: {reservationId} ya fue extendida previamente.");
+                return false;
+            }
+            reservation.RequestDate = DateTime.Now;
+            reservation.ExpirationDate = reservation.RequestDate.AddDays(7);
+            reservation.Status = ReservationStatus.Extended;
             var resultado = await _reservationDAO.ExtendReservation(reservation);
             if (resultado)
             {
@@ -106,10 +125,22 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<Boolean> RejectReservation(Reservation reservation)
+        public async Task<Boolean> RejectReservation(int reservationId, int userId) 
         {
+            var reservation = await _reservationDAO.GetReservation(reservationId);
+            if (reservation == null)
+            {
+                _logger.LogError($"No se encontró la reserva con ID: {reservationId}.");
+                return false;
+            }
+
+            if (reservation.UserId != userId)
+            {
+                _logger.LogError($"La reserva con ID: {reservationId} no pertenece al usuario con ID: {userId}.");
+                return false;
+            }
             reservation.Status = ReservationStatus.Rejected;
-            var resultado = await _reservationDAO.RejectReservation(reservation);
+            var resultado = await _reservationDAO.UpdateReservationStatus(reservation.ReservationId, (int)reservation.Status);
             var materialResult = await _materialDAO.UpdateMaterialStatus(reservation.MaterialId, 0);
 
             if (resultado)
@@ -124,10 +155,22 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<Boolean> CancelReservation(Reservation reservation)
+        public async Task<Boolean> CancelReservation(int reservationId, int userId)
         {
+            var reservation = await _reservationDAO.GetReservation(reservationId);
+            if (reservation == null)
+            {
+                _logger.LogError($"No se encontró la reserva con ID: {reservationId}.");
+                return false;
+            }
+
+            if (reservation.UserId != userId)
+            {
+                _logger.LogError($"La reserva con ID: {reservationId} no pertenece al usuario con ID: {userId}.");
+                return false;
+            }
             reservation.Status = ReservationStatus.Canceled;
-            var resultado = await _reservationDAO.CancelReservation(reservation);
+            var resultado = await _reservationDAO.UpdateReservationStatus(reservation.ReservationId, (int)reservation.Status);
             var materialResult = await _materialDAO.UpdateMaterialStatus(reservation.MaterialId, 0);
 
             if (resultado)

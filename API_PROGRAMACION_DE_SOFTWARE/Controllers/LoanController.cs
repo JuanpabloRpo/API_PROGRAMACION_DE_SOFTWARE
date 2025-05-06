@@ -45,17 +45,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpPut]
         [Route("Devolver")]
-        public async Task<IActionResult> ReturnLoan(Loan loan)
+        public async Task<IActionResult> ReturnLoan(int loanId, int userId)
         {
-            var resultado = await _loanService.ReturnLoan(loan);
+            var resultado = await _loanService.ReturnLoan(loanId, userId);
             return resultado == true ? Ok(resultado) : BadRequest("No se pudo actualizar el préstamo.");
         }
 
         [HttpPut]
         [Route("Cancelar")]
-        public async Task<IActionResult> CancelLoan(Loan loan)
+        public async Task<IActionResult> CancelLoan(int loanId, int userId)
         {
-            var resultado = await _loanService.CancelLoan(loan);
+            var resultado = await _loanService.CancelLoan(loanId, userId);
             return resultado == true ? Ok(resultado) : BadRequest("No se pudo cancelar el préstamo.");
         }
 
