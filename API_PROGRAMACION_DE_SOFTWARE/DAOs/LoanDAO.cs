@@ -94,7 +94,6 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 
         public async Task<Boolean> ReturnLoan(Loan loan)
         {
-            loan.ReturnDate = DateTime.Now;
             int result = 0;
             try
             {
@@ -125,11 +124,9 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 result = await db.ExecuteAsync(LoanQueries.cancelLoan, new
                 {
                     loan.LoanId,
-                    loan.ReturnDate,
                     Status = ConversorEnumInt.LoanStatusConver(LoanStatus.Canceled.ToString())
                 });
                 return result > 0;
-
             }
             catch (Exception ex)
             {

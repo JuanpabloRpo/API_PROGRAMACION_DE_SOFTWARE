@@ -75,8 +75,20 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
 
         }
 
-        public async Task<Boolean> ReturnLoan(Loan loan)
+        public async Task<Boolean> ReturnLoan(int loanId, int userId)
         {
+            var loan = await _loanDAO.GetLoan(loanId);
+            if (loan == null)
+            {
+                _logger.LogError($"No se encontró el préstamo con ID: {loanId}.");
+                return false;
+            }
+            if (loan.UserId != userId)
+            {
+                _logger.LogError($"El préstamo con ID: {loanId} no pertenece al usuario con ID: {userId}.");
+                return false;
+            }
+            loan.ReturnDate = DateTime.Now;
             bool resultado = await _loanDAO.ReturnLoan(loan);
             if (resultado)
             {
@@ -100,8 +112,19 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
         }
 
-        public async Task<Boolean> CancelLoan(Loan loan)
+        public async Task<Boolean> CancelLoan(int loanId, int userId)
         {
+            var loan = await _loanDAO.GetLoan(loanId);
+            if (loan == null)
+            {
+                _logger.LogError($"No se encontró el préstamo con ID: {loanId}.");
+                return false;
+            }
+            if (loan.UserId != userId)
+            {
+                _logger.LogError($"El préstamo con ID: {loanId} no pertenece al usuario con ID: {userId}.");
+                return false;
+            }
             bool resultado = await _loanDAO.CancelLoan(loan);
             if (resultado)
             {

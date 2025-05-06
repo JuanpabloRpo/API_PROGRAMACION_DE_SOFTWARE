@@ -7,7 +7,7 @@
         public static string checkReservationPending = @"
             SELECT * 
             FROM Reservations 
-            WHERE ReservationId = @ReservationId AND Status = 0";
+            WHERE ReservationId = @ReservationId AND Status IN (0, 5)";
         public static string updateReservationStatus = @"
             UPDATE Reservations 
             SET Status = @Status 
@@ -20,14 +20,6 @@
         public static string extendReservation = @"
             UPDATE Reservations 
             SET RequestDate = @RequestDate, ExpirationDate = @ExpirationDate, Status = @Status 
-            WHERE ReservationId = @ReservationId";
-        public static string rejectReservation = @"
-            UPDATE Reservations 
-            SET Status = @Status 
-            WHERE ReservationId = @ReservationId";
-        public static string cancelReservation = @"
-            UPDATE Reservations 
-            SET Status = @Status 
             WHERE ReservationId = @ReservationId";
         public static string deleteReservation = @"DELETE FROM Reservations WHERE ReservationId = @ReservationId";
     }
