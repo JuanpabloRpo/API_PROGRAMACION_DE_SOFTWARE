@@ -14,10 +14,10 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
     public class LoginDAO : ILoginDAO
     {
         private readonly SQLServerConfiguration _connectionString;
-        private readonly ILogger<LoanController> _logger;
+        private readonly ILogger<LoginController> _logger;
 
 
-        public LoginDAO(IOptions<SQLServerConfiguration> connectionString, ILogger<LoanController> logger)
+        public LoginDAO(IOptions<SQLServerConfiguration> connectionString, ILogger<LoginController> logger)
         {
             _connectionString = connectionString.Value;
             _logger = logger;

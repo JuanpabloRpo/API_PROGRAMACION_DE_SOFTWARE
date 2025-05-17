@@ -38,20 +38,36 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddScoped<ILoginDAO, LoginDAO>();
     builder.Services.AddScoped<ILoginService, LoginService>();
-
 builder.Services
+    .AddControllers();
+
+/*builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+    });*/
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorApp", policy =>
+    {
+        policy.WithOrigins("https://localhost:7150", "http://localhost:5035")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+        
+    });
+});
+
+
+
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -61,6 +77,8 @@ builder.Services.AddEndpointsApiExplorer();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseCors("AllowBlazorApp");
 
     app.UseAuthorization();
 

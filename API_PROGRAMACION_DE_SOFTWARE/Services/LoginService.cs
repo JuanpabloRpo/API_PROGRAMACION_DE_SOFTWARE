@@ -1,7 +1,5 @@
 ﻿using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Contracts;
+using API_PROGRAMACION_DE_SOFTWARE.Entities;
 
 namespace API_PROGRAMACION_DE_SOFTWARE.Services
 {
@@ -15,9 +13,10 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             _loginDAO = loginDAO;
         }
 
-        public async Task<Boolean> check(string UserName, string Password)
+        public async Task<User> check(string UserName, string Password)
         {
-            return await _loginDAO.SearchUser(UserName, Password) != null? true:false;
+           
+            return await _loginDAO.SearchUser(UserName, Password);
         }
     }
 
