@@ -11,8 +11,6 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Interfaces
         Task<List<Reservation>> SearchReservationsUser(int UserId);
         Task<Boolean> CreateReservation(Reservation reservation);
         Task<Boolean> ExtendReservation(Reservation reservation);
-        Task<Boolean> RejectReservation(Reservation reservation);
-        Task<Boolean> CancelReservation(Reservation reservation);
         Task<Boolean> DeleteReservation(int reservationId);
     }
 }

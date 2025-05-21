@@ -8,8 +8,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Entities
         [Key]
         public int Id { get; set; }
         [Required]
-        [Range(0, 999999999999999)]
-        public int Document { get; set; }
+        public string Document { get; set; }
         [Required]
         [MaxLength(100)]
         public required string FirstName { get; set; } 

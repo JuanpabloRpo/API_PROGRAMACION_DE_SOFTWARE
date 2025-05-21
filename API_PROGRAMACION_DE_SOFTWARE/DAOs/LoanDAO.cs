@@ -69,6 +69,22 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 throw;
             }
         }
+        public async Task<List<Loan>> SearchLoansUser(int userId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryAsync<Loan>(LoanQueries.searchLoansUser, new { UserId = userId });
+                return reservation.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar los prestamos para el usuario con ID: {userId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+
+            }
+            return null;
+        }
 
         public async Task<Boolean> CreateLoan(int reservationId, int userId)
         {
@@ -94,7 +110,6 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
 
         public async Task<Boolean> ReturnLoan(Loan loan)
         {
-            loan.ReturnDate = DateTime.Now;
             int result = 0;
             try
             {
@@ -125,11 +140,9 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 result = await db.ExecuteAsync(LoanQueries.cancelLoan, new
                 {
                     loan.LoanId,
-                    loan.ReturnDate,
                     Status = ConversorEnumInt.LoanStatusConver(LoanStatus.Canceled.ToString())
                 });
                 return result > 0;
-
             }
             catch (Exception ex)
             {

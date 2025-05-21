@@ -35,6 +35,15 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
             
         }
 
+        [HttpGet]
+        [Route("PrestamosUsuario")]
+        public async Task<IActionResult> GetLoansUser(int userId)
+        {
+            var loan = await _loanService.GetLoansUser(userId);
+            return loan == null ? BadRequest("El usuario no tiene prestamos") : Ok(loan);
+
+        }
+
         [HttpPost]
         [Route("Crear")]
         public async Task<IActionResult> CreateLoan(int reservationId, int userId)
@@ -45,17 +54,17 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpPut]
         [Route("Devolver")]
-        public async Task<IActionResult> ReturnLoan(Loan loan)
+        public async Task<IActionResult> ReturnLoan(int loanId, int userId)
         {
-            var resultado = await _loanService.ReturnLoan(loan);
+            var resultado = await _loanService.ReturnLoan(loanId, userId);
             return resultado == true ? Ok(resultado) : BadRequest("No se pudo actualizar el préstamo.");
         }
 
         [HttpPut]
         [Route("Cancelar")]
-        public async Task<IActionResult> CancelLoan(Loan loan)
+        public async Task<IActionResult> CancelLoan(int loanId, int userId)
         {
-            var resultado = await _loanService.CancelLoan(loan);
+            var resultado = await _loanService.CancelLoan(loanId, userId);
             return resultado == true ? Ok(resultado) : BadRequest("No se pudo cancelar el préstamo.");
         }
 
@@ -64,7 +73,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         public async Task<IActionResult> DeleteLoan(int loanId)
         {
             var resultado = await _loanService.DeleteLoan(loanId);
-            return resultado == true ? NoContent() : NotFound();
+            return resultado == true ? Ok() : NotFound();
         }
 
     }

@@ -19,12 +19,12 @@
 
         public static string cancelLoan = @"
             UPDATE Loans
-            SET ReturnDate = @ReturnDate,
-                Status = @Status
+            SET Status = @Status
             WHERE LoanId = @LoanId;";
 
         public static string deleteLoan = @"
             DELETE FROM Loans 
             WHERE LoanId = @LoanId;";
+        public static string searchLoansUser = @"SELECT * FROM Loans WHERE UserId = @userId";
     }
 }

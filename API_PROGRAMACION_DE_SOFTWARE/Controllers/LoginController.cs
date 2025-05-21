@@ -1,4 +1,5 @@
-﻿using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
+﻿using API_PROGRAMACION_DE_SOFTWARE.Entities;
+using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Expressions;
@@ -20,9 +21,10 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
 
         [HttpGet]
         [Route("VerificarUsuario")]
-        public async Task<ActionResult> Check(string userName, string password) 
+        public async Task<IActionResult> Check(string userName, string password) 
         {
-            return await _loginService.check(userName, password) == true ? Ok(true): NotFound(false) ;
+            var user = await _loginService.check(userName, password);
+            return  user != null ? Ok(user): NotFound();
         }
     }
 }
