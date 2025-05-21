@@ -79,7 +79,7 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         [Route("Eliminar")]
         public async Task<IActionResult> DeleteReservation(int reservationId)
         {
-            return await _reservationService.DeleteReservation(reservationId) == true ? NoContent():NotFound();
+            return await _reservationService.DeleteReservation(reservationId) == true ? Ok():NotFound();
         }
     }
 }

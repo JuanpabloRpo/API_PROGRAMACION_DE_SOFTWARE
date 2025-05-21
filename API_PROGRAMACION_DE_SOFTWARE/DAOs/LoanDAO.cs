@@ -69,6 +69,22 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                 throw;
             }
         }
+        public async Task<List<Loan>> SearchLoansUser(int userId)
+        {
+            try
+            {
+                using var db = Connection();
+                var reservation = await db.QueryAsync<Loan>(LoanQueries.searchLoansUser, new { UserId = userId });
+                return reservation.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error al buscar los prestamos para el usuario con ID: {userId} en la base de datos SQL Server: {ex.Message}");
+                Console.WriteLine($"Error SQL Server (buscar): {ex.Message}");
+
+            }
+            return null;
+        }
 
         public async Task<Boolean> CreateLoan(int reservationId, int userId)
         {
