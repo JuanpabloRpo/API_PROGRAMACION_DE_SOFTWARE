@@ -25,5 +25,6 @@
         public static string deleteLoan = @"
             DELETE FROM Loans 
             WHERE LoanId = @LoanId;";
+        public static string searchLoansUser = @"SELECT * FROM Loans WHERE UserId = @userId";
     }
 }

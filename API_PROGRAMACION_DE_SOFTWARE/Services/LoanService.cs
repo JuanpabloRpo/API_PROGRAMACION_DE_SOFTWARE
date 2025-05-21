@@ -42,6 +42,20 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Services
             }
             return loan;
         }
+        public async Task<List<Loan>> GetLoansUser(int UserId)
+        {
+            var result = await _loanDAO.SearchLoansUser(UserId);
+            if (result != null)
+            {
+                _logger.LogInformation($"Se encontraron los prestamos del usuario con ID: {UserId}");
+                return result;
+            }
+            else
+            {
+                _logger.LogWarning($"No se encontró prestamos para el usuario con ID: {UserId}.");
+                return null;
+            }
+        }
 
         public async Task<Boolean> CreateLoan(int reservationId, int userId)
         {

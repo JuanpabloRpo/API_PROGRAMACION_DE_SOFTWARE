@@ -79,7 +79,10 @@ namespace API_PROGRAMACION_DE_SOFTWARE.DAOs
                     user.Email,
                     user.UserName,
                     user.Password,
-                    user.TypeUser
+                    user.TypeUser,
+                    user.Role,
+                    user.Arrears,
+                    user.IsActive
                 });
                 return result > 0;
 
