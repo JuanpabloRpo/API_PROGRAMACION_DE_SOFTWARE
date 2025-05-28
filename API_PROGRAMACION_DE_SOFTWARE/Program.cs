@@ -1,9 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using API_PROGRAMACION_DE_SOFTWARE.DAOs;
 using API_PROGRAMACION_DE_SOFTWARE.Interfaces;
-using API_PROGRAMACION_DE_SOFTWARE.Utilities;
 using API_PROGRAMACION_DE_SOFTWARE.Services;
+using API_PROGRAMACION_DE_SOFTWARE.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 
 //using Library.Services;
@@ -47,6 +48,11 @@ builder.Services
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });*/
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.TypeInfoResolverChain.Insert(0, new DefaultJsonTypeInfoResolver());
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 

@@ -40,8 +40,15 @@ namespace API_PROGRAMACION_DE_SOFTWARE.Controllers
         }
 
         [HttpPost]
-        [Route("Crear")]
-        public async Task<IActionResult> CreateMaterial(Material material)
+        [Route("CrearLibro")]
+        public async Task<IActionResult> CreateMaterial(Book material)
+        {
+            return await _materialService.CreateMaterial(material) ? Ok("Material creado") : BadRequest("No se pudo crear el material.");
+        }
+
+        [HttpPost]
+        [Route("CrearAudioVisual")]
+        public async Task<IActionResult> CreateMaterial(Audiovisual material)
         {
             return await _materialService.CreateMaterial(material) ? Ok("Material creado") : BadRequest("No se pudo crear el material.");
         }
